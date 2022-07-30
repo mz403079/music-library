@@ -5,9 +5,14 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { verify } from "argon2";
 import Credentials from "next-auth/providers/credentials";
+import { z } from "zod";
 import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db/client";
-import { loginSchema } from "../../../utils/trpc.js";
+
+ const loginSchema = z.object({
+   email: z.string().email(),
+   password: z.string().min(4).max(12),
+ });
 
 export const authOptions: NextAuthOptions = {
   session: {

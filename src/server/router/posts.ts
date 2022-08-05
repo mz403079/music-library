@@ -33,7 +33,7 @@ export const postRouter = createRouter()
       for(let i = 0; i < 100; i++) {
         posts.push({})
       }
-      prisma?.post.createMany
+
       return await ctx.prisma.post.findMany({
         where: {
           title: { contains: input?.text ?? undefined },

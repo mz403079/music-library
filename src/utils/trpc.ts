@@ -38,3 +38,8 @@ export const signupSchema = z.object({
 });
 
 export type ISignUp = inferMutationInput<"auth.signup">;
+
+export type IPost = inferQueryOutput<"posts.getPost">;
+
+export type IPosts = inferQueryOutput<"posts.getPosts">;
+

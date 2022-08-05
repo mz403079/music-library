@@ -1,0 +1,11 @@
+.root {
+  @apply px-4 py-2 border font-semibold;
+}
+
+.primary {
+  @apply bg-black border-black  text-white hover:bg-red-400 hover:text-black hover:border-red-400;
+}
+
+.secondary {
+  @apply bg-white border-black text-black hover:bg-red-400 hover:text-black hover:border-red-400;
+}

@@ -6,16 +6,32 @@ import Head from "next/head";
 import Link from "next/link";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { loginSchema } from "../utils/trpc";
+import { z } from "zod";
+import { Input } from "../components";
 
 const Home: NextPage = () => {
-  const { register, handleSubmit } = useForm<{
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, dirtyFields },
+  } = useForm<{
     email: string;
     password: string;
   }>({
-    resolver: zodResolver(loginSchema),
+    mode: 'onChange',
+    resolver: zodResolver(
+      z.object({
+        email: z
+          .string({ required_error: "Field is required" }).email({message:"Incorrect email format"})
+          .max(10, { message: "Too long" }),
+        password: z
+          .string({ required_error: "Field is required" })
+          .min(4, { message: "Too short" })
+          .max(12, { message: "Too long" }),
+      })
+    ),
   });
-
+  console.log(errors)
   const onSubmit = useCallback(
     async (data: { email: string; password: string }) => {
       await signIn("credentials", { ...data, callbackUrl: "/dashboard" });
@@ -39,17 +55,23 @@ const Home: NextPage = () => {
           <div className="card w-96 bg-base-100 shadow-xl">
             <div className="card-body">
               <h2 className="card-title">Welcome back!</h2>
-              <input
+              <Input
                 type="email"
                 placeholder="Type your email..."
-                className="input input-bordered w-full max-w-xs mt-2"
-                {...register("email")}
+                register={register}
+                label="Email"
+                name="email"
+                error={errors.email}
+                isDirty={dirtyFields.email}
               />
-              <input
+              <Input
                 type="password"
                 placeholder="Type your password..."
-                className="input input-bordered w-full max-w-xs my-2"
-                {...register("password")}
+                register={register}
+                label="Password"
+                name="password"
+                error={errors.password}
+                isDirty={dirtyFields.password}
               />
               <div className="card-actions items-center justify-between">
                 <Link href="/sign-up" className="link">
